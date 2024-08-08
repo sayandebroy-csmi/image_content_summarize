@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Page title -->
+    <title>Image Summarization</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <!-- Page heading -->
+      <h1 class="mt-5">Upload an Image for Content Summarization</h1>
+
+      <!-- Image upload form -->
+      <form id="upload-form" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="file">Select an image file</label>
+          <input type="file" class="form-control-file" id="file" name="file" accept="image/*" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+      </form>
+
+      <hr>
+
+      <!-- Summary display section -->
+      <h2>Summary</h2>
+      <p id="summary"></p>
+    </div>
+    
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <!-- Custom JavaScript for form submission and summary display -->
+    <script>
+      $(document).ready(function () {
+        // Handle form submission
+        $('#upload-form').on('submit', function (event) {
+          // Prevent the default form submission
+          event.preventDefault();
+          
+          // Create a FormData object to send the file
+          var formData = new FormData(this);
+
+          // Send an AJAX request to the server
+          $.ajax({
+            url: '/summarize',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            // On successful response
+            success: function (response) {
+              // Display the summary
+              $('#summary').text(response.summary);
+            },
+            // On error
+            error: function (jqXHR, textStatus, errorThrown) {
+              // Display the error message
+              $('#summary').text('Error: ' + jqXHR.responseJSON.error);
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
